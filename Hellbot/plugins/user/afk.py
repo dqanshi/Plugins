@@ -129,6 +129,8 @@ async def afk_watch(client: Client, message: Message):
 
 @custom_handler(filters.outgoing, 2)
 async def remove_afk(_, message: Message):
+    if not message.from_user:
+        return
     if await db.is_afk(message.from_user.id):
         if "afk" in message.text:
             return
