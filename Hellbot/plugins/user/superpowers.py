@@ -2,9 +2,9 @@ import asyncio
 import datetime
 
 from pyrogram import Client, filters
-from pyrogram.enums import ChatType
+from pyrogram.enums import ChatType, ChatMemberStatus as CMS
 from pyrogram.errors import FloodWait
-from pyrogram.types import ChatPermissions, ChatPrivileges, Message
+from pyrogram.types import ChatMemberUpdated, ChatPermissions, ChatPrivileges, Message
 
 from Hellbot.functions.templates import gban_templates
 
@@ -516,22 +516,24 @@ async def gmutelist(_, message: Message):
 
 
 @custom_handler(filters.new_chat_members)
-async def globalbanwatcher(_, message: Message):
-    if not message.from_user:
+async def globalbanwatcher(_, u: ChatMemberUpdated):
+    if not (member.new_chat_member and member.new_chat_member.status not in {CMS.BANNED, CMS.LEFT, CMS.RESTRICTED} and not member.old_chat_member):
         return
+    
+    user = member.new_chat_member.user if member.new_chat_member else member.from_user
 
-    if await db.is_gbanned(message.from_user.id):
-        gban_data = await db.get_gban_user(message.from_user.id)
+    if await db.is_gbanned(user.id):
+        gban_data = await db.get_gban_user(user.id)
         watchertext = f"**𝖦𝖻𝖺𝗇𝗇𝖾𝖽 𝖴𝗌𝖾𝗋 𝗃𝗈𝗂𝗇𝖾𝖽 𝗍𝗁𝖾 𝖼𝗁𝖺𝗍! \n\n{Symbols.bullet} 𝖦𝖻𝖺𝗇 𝖱𝖾𝖺𝗌𝗈𝗇 𝗐𝖺𝗌:** __{gban_data['reason']}__\n**{Symbols.bullet} 𝖦𝖻𝖺𝗇 𝖣𝖺𝗍𝖾:** __{gban_data['date']}__\n\n"
 
         try:
-            await message.chat.ban_member(message.from_user.id)
+            await _.ban_chat_member(u.chat.id, user.id)
             watchertext += f"**𝖲𝗈𝗋𝗋𝗒 𝖨 𝖼𝖺𝗇'𝗍 𝗌𝖾𝖾 𝗒𝗈𝗎 𝗂𝗇 𝗍𝗁𝗂𝗌 𝖼𝗁𝖺𝗍!**"
         except BaseException:
             watchertext += f"Reported to @admins"
 
-        await message.reply_text(watchertext)
-
+        await _.send_message(u.chat.id, watchertext)
+    return
 
 HelpMenu("superpowers").add(
     "gpromote",
