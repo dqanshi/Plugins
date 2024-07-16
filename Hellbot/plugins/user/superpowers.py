@@ -515,7 +515,7 @@ async def gmutelist(_, message: Message):
     await hell.edit(text)
 
 
-@custom_handler(filters.new_chat_members)
+@Client.on_chat_member_updated()
 async def globalbanwatcher(_, u: ChatMemberUpdated):
     if not (member.new_chat_member and member.new_chat_member.status not in {CMS.BANNED, CMS.LEFT, CMS.RESTRICTED} and not member.old_chat_member):
         return
