@@ -1,6 +1,7 @@
 import asyncio
 
 from pyrogram import Client
+from pyrogram.errors.exceptions import FloodWait
 from pyrogram.types import Message
 
 from . import HelpMenu, hellbot, on_message
@@ -25,8 +26,12 @@ async def purgeMsg(client: Client, message: Message):
     from_msg = message.reply_to_message
 
     hell = await hellbot.edit(message, "__Purging...__")
-    for msg_ids in _chunk(from_msg.id, message.id + 1):
+    for msg_ids in range(from_msg.id, message.id + 1):
         try:
+            status = await client.delete_messages(message.chat.id, msg_ids)
+            deleted += status
+        except FloodWait as e:
+            await asyncio.sleep(e.value)
             status = await client.delete_messages(message.chat.id, msg_ids)
             deleted += status
         except:
