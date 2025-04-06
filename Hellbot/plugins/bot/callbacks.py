@@ -11,7 +11,7 @@ from . import HELP_MSG, START_MSG, Config, Symbols, hellbot
 async def check_auth_click(cb: CallbackQuery) -> bool:
     if cb.from_user.id not in Config.AUTH_USERS:
         await cb.answer(
-            "You are not authorized to use this bot. \n\n</> @Its_HellBot",
+            "You are not authorized to use this bot. \n\n</> ",
             show_alert=True,
         )
         return False
@@ -189,7 +189,7 @@ async def help_cmd_cb(_, cb: CallbackQuery):
     if cmd_dict["note"]:
         result += f"\n\n**{Symbols.arrow_right} 𝖭𝗈𝗍𝖾:** __{cmd_dict['note']}__"
 
-    result += f"\n\n**<\\> @Its_HellBot 🍀**"
+    result += f"\n\n**<\\> @am_dq_fan 🍀**"
 
     buttons = [
         [
@@ -249,11 +249,11 @@ async def help_close_cb(_, cb: CallbackQuery):
                 InlineKeyboardButton("Plugins 📂", url="https://github.com/The-HellBot/Plugins"),
             ],
             [
-                InlineKeyboardButton("нєℓℓвσт ηєтωσяк 🇮🇳", url="https://t.me/HellBot_Networks"),
+                InlineKeyboardButton("нєℓℓвσт ηєтωσяк 🇮🇳", url="https://t.me/theroyalfox"),
             ],
             [
-                InlineKeyboardButton("🎙️ Support", url="https://t.me/HellBot_Chats"),
-                InlineKeyboardButton("Updates 📣", url="https://t.me/Its_HellBot"),
+                InlineKeyboardButton("🎙️ Support", url="https://t.me/blazingsupport_group"),
+                InlineKeyboardButton("Updates 📣", url="https://t.me/danger_bots"),
             ],
             [
                 InlineKeyboardButton("🔙", "help_data:start"),
@@ -266,7 +266,7 @@ async def help_close_cb(_, cb: CallbackQuery):
             "__» Anyone pretending to be the developer of this bot and selling the code, is a scammer.__\n\n"
             "__» Please consider giving a star to the repository if you liked the project.__\n"
             "__» Feel free to contact us if you need any help regarding the source code.__\n\n"
-            "**❤️ @HellBot_Networks 🇮🇳**",
+            "**❤️ @danger_bots 🇮🇳**",
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup(buttons),
         )
